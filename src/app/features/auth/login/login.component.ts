@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../shared/toast/toast.service';
 
 @Component({
   standalone: true,
@@ -17,13 +18,14 @@ export class LoginComponent {
   loading = false;
   error: string | null = null;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router, private toast: ToastService) {}
 
-  submit() {
+  submit(f: NgForm) {
+    if (f.invalid) return;
     this.loading = true; this.error = null;
-    this.auth.login({ email: this.email, password: this.password }).subscribe({
-      next: () => this.router.navigate(['/movies']),
-      error: (e) => { this.error = e?.error?.message || 'Login failed'; this.loading = false; }
+    this.auth.login({ email: this.email.trim(), password: this.password }).subscribe({
+      next: () => { this.loading = false; this.toast.success('Welcome'); this.router.navigate(['/movies']); },
+      error: (e) => { this.loading = false; this.error = e?.error?.message || 'Login failed'; this.toast.error(this.error || 'Login failed'); }
     });
   }
 }

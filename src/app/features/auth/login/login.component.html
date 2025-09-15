@@ -1,9 +1,19 @@
 <h2>Login</h2>
-<form (ngSubmit)="submit()">
+<form #f="ngForm" (ngSubmit)="submit(f)" novalidate>
   <label>Email</label>
-  <input type="email" [(ngModel)]="email" name="email" required />
+  <input type="email" name="email" [(ngModel)]="email" #em="ngModel" required email />
+  <div class="err" *ngIf="(em.touched || f.submitted) && em.invalid">
+    <span *ngIf="em.errors?.['required']">Email is required</span>
+    <span *ngIf="em.errors?.['email']">Enter a valid email</span>
+  </div>
+
   <label>Password</label>
-  <input type="password" [(ngModel)]="password" name="password" required />
-  <button [disabled]="loading">{{ loading ? '...' : 'Login' }}</button>
-  <p *ngIf="error" style="color:#c00">{{ error }}</p>
+  <input type="password" name="password" [(ngModel)]="password" #pw="ngModel" required minlength="6" />
+  <div class="err" *ngIf="(pw.touched || f.submitted) && pw.invalid">
+    <span *ngIf="pw.errors?.['required']">Password is required</span>
+    <span *ngIf="pw.errors?.['minlength']">At least 6 characters</span>
+  </div>
+
+  <button [disabled]="loading || f.invalid">{{ loading ? '...' : 'Login' }}</button>
+  <p class="server-error" *ngIf="error">{{ error }}</p>
 </form>
