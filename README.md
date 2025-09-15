@@ -1,59 +1,115 @@
-# Movieapp
+# Movie Dashboard (Angular 17+)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.6.
+A clean, modern movie dashboard built with **Angular 17 (standalone & signals)**. It integrates with a Spring Boot backend for **JWT authentication (access + refresh)**, **admin OMDb imports**, **DB movie listing**, **movie details**, and **per-user ratings**. Sleek UI with **toasts**, **SVG icons**, and **fixed pagination**.
 
-## Development server
+**Backend API:** 👉 [Movie Backend-Spring boot](https://github.com/hanin-mohamed/Movie-APP)
 
-To start a local development server, run:
+---
 
+##  Features
+
+- **Auth & Roles**
+  - Login via backend (JWT); automatic refresh on 401 via interceptor
+  - Guards: `authGuard` and `roleGuard('ADMIN')`
+  - Logout button in Movies toolbar
+
+- **Users**
+  - Browse movies from DB with **search + pagination (1-based)**
+  - View **movie details** (plot, cast, runtime, etc.)
+  - **Rate** a movie (1–5), update or clear rating
+  - Subtle **toasts** for success/failure actions
+
+- **Admin**
+  - **DB tab:** list movies in DB + **delete** (single)
+  - **Import tab:** search **OMDb** (via backend), multi-select, **import selected**; back to DB view
+  - Clean, compact **SVG** delete icons; consistent card/table styles
+
+- **UI/UX**
+  - Angular **Signals** for state (loading, page, query, data)
+  - Standalone components, lightweight CSS, consistent card sizes
+  - Pagination footer always pinned visually at bottom area
+
+---
+
+## Tech Stack
+
+- **Angular 17** (Standalone Components, Signals)
+- **RxJS**, **Angular Router**
+- **HTTP Interceptor** (Bearer token + auto refresh)
+- **SCSS** styling
+- **Toast** micro-component (no external UI libs required)
+
+> OMDb integration is handled **by the backend**.
+
+---
+
+##  Getting Started
+
+### 1) Prerequisites
+- Node.js 18+
+- Angular CLI 17+
+- Running backend API (see **Movie API (Spring Boot)**)
+
+### 2) Clone
 ```bash
-ng serve
+git clone https://github.com/hanin-mohamed/Movie-APP-Frontend
+cd Movie-APP-Frontend
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+### 3) Environment
+`src/environment.ts`
+```ts
+export const environment = {
+  apiBaseUrl: 'http://localhost:8080'
+};
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
+### 4) Install & Run
 ```bash
-ng generate --help
+npm install
+ng serve -o
 ```
+App runs on: `http://localhost:4200`
 
-## Building
+> Ensure backend CORS allows `http://localhost:4200`.
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+##  Authentication & Roles
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- **Login** returns `{ accessToken, refreshToken }`. Tokens are stored in localStorage.
+- **Interceptor** attaches `Authorization: Bearer <accessToken>` for all non-auth endpoints.
+- On `401 Unauthorized`, the interceptor tries `/auth/refresh` automatically.
+- **Guards**:
+  - `authGuard` → protects routes from unauthenticated access
+  - `roleGuard('ADMIN')` → protects admin-only routes
+- **Logout** clears tokens (and calls backend `/auth/logout` for refresh revocation).
 
-## Running unit tests
+---
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+##  Main Screens
 
-```bash
-ng test
-```
+### Movies (Users & Admin)
+- Search + pagination of **DB movies**
+- Each card links to **movie details**
+- If **ADMIN**, a small **delete** SVG icon appears on cards
 
-## Running end-to-end tests
+### Movie Details
+- Poster, title, year, genre, runtime, plot, cast, etc.
+- **Star rating** (`app-stars`) with live update and **toast** feedback
+- Clear my rating button
 
-For end-to-end (e2e) testing, run:
+### Admin Dashboard
+- **DB tab**: table of movies in DB with delete
+- **Import tab**: search OMDb (via backend), checkbox select, **Import Selected**, then **Back to your movies**
+- Fixed small checkboxes and clean card layout
 
-```bash
-ng e2e
-```
+---
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+##  Configuration Notes
 
-## Additional Resources
+- `apiBaseUrl` must point to your running backend (default `http://localhost:8080`).
+- Keep `<app-toast></app-toast>` placed globally (e.g., in `app.component.html`).
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+
