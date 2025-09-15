@@ -1,0 +1,38 @@
+<h2>Movies</h2>
+
+<div class="toolbar">
+  <form (ngSubmit)="search()" class="row">
+    <input [ngModel]="q()" (ngModelChange)="q.set($event)" name="q" placeholder="Search..." />
+    <button>Search</button>
+  </form>
+  <span class="spacer"></span>
+  <a *ngIf="isAdmin" routerLink="/admin" class="admin-btn">Admin Dashboard</a>
+  <button type="button" class="logout-btn" (click)="logout()">Logout</button>
+</div>
+
+<div class="wrap">
+  <div *ngIf="loading()">Loading...</div>
+
+  <div class="grid" *ngIf="!loading() && data() as d">
+    <a class="card" *ngFor="let m of d.content; trackBy: trackById" [routerLink]="['/movies', m.imdbId]">
+      <img *ngIf="m.poster" [src]="m.poster" alt="" />
+      <div class="meta">
+        <h3>{{ m.title }}</h3>
+        <p>{{ m.year }} • {{ m.type }}</p>
+      </div>
+      <button *ngIf="isAdmin" class="icon-btn danger" title="Delete" (click)="onDelete($event, m.imdbId)">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path d="M3 6h18M9 6l1-2h4l1 2m-1 0v12a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V6"
+                fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </a>
+  </div>
+
+  <div class="pagination">
+    <button (click)="prev()" [disabled]="page()===1">Prev</button>
+    <span>Page {{ page() }} / {{ totalPages() }}</span>
+    <button (click)="next()" [disabled]="page()===totalPages()">Next</button>
+  </div>
+</div>

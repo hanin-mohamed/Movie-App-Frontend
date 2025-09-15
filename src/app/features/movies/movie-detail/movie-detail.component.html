@@ -1,0 +1,24 @@
+<div *ngIf="loading()">Loading...</div>
+<div *ngIf="!loading() && movie() as m">
+  <div class="layout">
+    <img *ngIf="m.poster" [src]="m.poster" class="poster" />
+    <div>
+      <h2>{{ m.title }}</h2>
+      <p>{{ m.year }} • {{ m.type }}</p>
+      <p>{{ m.genre }}</p>
+      <p>{{ m.runtime }} | {{ m.rated }} | {{ m.released }}</p>
+      <p>{{ m.plot }}</p>
+      <p>Director: {{ m.director }}</p>
+      <p>Actors: {{ m.actors }}</p>
+
+      <div class="rating">
+        <div>Average: {{ summary()?.average ?? 0 }} ({{ summary()?.count ?? 0 }} votes)</div>
+        <div class="my">
+          <span>My rating:</span>
+          <app-stars [value]="my() ?? 0" (valueChange)="rate($event)"></app-stars>
+          <button (click)="clear()" [disabled]="saving() || (my()==null)">Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

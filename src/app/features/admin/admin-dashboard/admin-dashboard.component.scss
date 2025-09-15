@@ -1,0 +1,57 @@
+:host{display:block;padding:16px}
+
+.wrap{display:flex;flex-direction:column;min-height:calc(100vh - 160px)}
+.toolbar{display:flex;justify-content:flex-end;margin:8px 0}
+.row{display:flex;gap:8px;margin:10px 0}
+
+.row input{flex:1;padding:10px 12px;border:1px solid #ddd;border-radius:8px;outline:none}
+
+button{padding:10px 14px;border:0;border-radius:8px;background:#111;color:#fff;cursor:pointer}
+button[disabled]{opacity:.6;cursor:default}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:12px 0}
+
+.card{
+  position:relative;
+  display:flex;
+  gap:10px;
+  padding:12px;
+  border:1px solid #eee;
+  border-radius:12px;
+  background:#fff
+}
+.card img{width:60px;height:90px;object-fit:cover;border-radius:8px}
+
+.card input[type="checkbox"]{
+  position:absolute;
+  top:10px; left:10px;
+  width:18px; height:18px;
+  margin:0; padding:0;
+  accent-color:#0a7a39;
+  appearance:auto;
+  background:#fff;
+  border-radius:4px
+}
+
+.card input[type="checkbox"]:checked + img{
+  outline:3px solid #0a7a39;
+  outline-offset:2px;
+  border-radius:8px
+}
+
+.card .meta{display:flex;flex-direction:column}
+.card .title{font-weight:600}
+.card .sub{opacity:.7;font-size:12px}
+
+.list{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden}
+.list th,.list td{padding:10px;border-bottom:1px solid #eee;text-align:left}
+
+.pager{margin-top:auto;display:flex;gap:12px;justify-content:center;align-items:center;padding:16px 0}
+.spacer{flex:1}
+
+.icon-btn{
+  width:32px;height:32px;padding:0;border-radius:8px;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:#111;color:#fff;border:0;cursor:pointer
+}
+.icon-btn.danger{background:#b00020}

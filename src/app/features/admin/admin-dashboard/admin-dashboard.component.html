@@ -1,0 +1,72 @@
+<h2>Admin Dashboard</h2>
+
+<section *ngIf="mode==='db'" class="wrap">
+  <div class="toolbar">
+    <button (click)="enterImport()">Import Movies</button>
+  </div>
+
+  <div *ngIf="dbLoading">Loading...</div>
+  <ng-container *ngIf="!dbLoading && dbData as d">
+    <table class="list">
+      <tr><th>Poster</th><th>Title</th><th>Year</th><th>Type</th><th></th></tr>
+      <tr *ngFor="let m of d.content; trackBy: trackDb">
+        <td><img [src]="m.poster" width="40" height="60"/></td>
+        <td>{{ m.title }}</td>
+        <td>{{ m.year }}</td>
+        <td>{{ m.type }}</td>
+        <td>
+          <button class="icon-btn danger" title="Delete" (click)="deleteOne(m.imdbId)">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <path d="M3 6h18M9 6l1-2h4l1 2m-1 0v12a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V6"
+                    fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </td>
+      </tr>
+    </table>
+
+    <div class="pager">
+      <button (click)="prevDb()" [disabled]="page===1">Prev</button>
+      <span>Page {{ page }} / {{ d.totalPages }}</span>
+      <button (click)="nextDb()" [disabled]="page===d.totalPages">Next</button>
+    </div>
+  </ng-container>
+</section>
+
+<section *ngIf="mode==='import'" class="wrap">
+  <div class="toolbar">
+    <button (click)="backToDb()">Back to your movies</button>
+  </div>
+
+  <form (ngSubmit)="omdbPage=1; searchOmdb()" class="row">
+    <input [(ngModel)]="q" name="q" placeholder="Search OMDb..." />
+    <button>Search</button>
+  </form>
+
+  <div *ngIf="omdbLoading">Loading...</div>
+  <ng-container *ngIf="!omdbLoading && omdbRes">
+    <p *ngIf="omdbRes.Response==='False'">{{ omdbRes.Error }}</p>
+
+    <div *ngIf="omdbRes.Response==='True' && omdbRes.Search?.length">
+      <div class="grid">
+        <label class="card" *ngFor="let i of omdbRes.Search; trackBy: trackOmdb">
+          <input type="checkbox" [checked]="selected.has(i.imdbID)" (change)="toggle(i.imdbID)" />
+          <img [src]="i.Poster" alt="">
+          <div class="meta">
+            <div class="title">{{ i.Title }}</div>
+            <div class="sub">{{ i.Year }} • {{ i.Type }}</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="pager">
+        <button (click)="omdbPrev()" [disabled]="omdbPage===1">Prev</button>
+        <span>Page {{ omdbPage }}</span>
+        <button (click)="omdbNext()">Next</button>
+        <span class="spacer"></span>
+        <button (click)="importSelected()" [disabled]="!selected.size">Import Selected ({{selected.size}})</button>
+      </div>
+    </div>
+  </ng-container>
+</section>

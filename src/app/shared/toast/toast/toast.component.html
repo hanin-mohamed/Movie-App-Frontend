@@ -1,0 +1,7 @@
+<div class="toast-wrap">
+      <div class="toast" *ngFor="let t of toast.toasts(); trackBy: track"
+           [class.success]="t.type==='success'" [class.error]="t.type==='error'">
+        <div class="msg">{{ t.message }}</div>
+        <button class="close" (click)="toast.dismiss(t.id)">&times;</button>
+      </div>
+    </div>

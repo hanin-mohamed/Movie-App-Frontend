@@ -1,0 +1,10 @@
+:host{display:block;padding:16px}
+.layout{display:grid;grid-template-columns:240px 1fr;gap:16px;align-items:start}
+.poster{width:100%;max-width:240px;border-radius:10px;object-fit:cover;border:1px solid #eee}
+h2{margin:0 0 8px}
+p{margin:4px 0}
+.rating{margin-top:12px;padding-top:12px;border-top:1px dashed #eee;display:grid;gap:8px}
+.my{display:flex;align-items:center;gap:10px}
+button{padding:8px 12px;border:0;border-radius:8px;background:#222;color:#fff;cursor:pointer}
+button[disabled]{opacity:.6;cursor:default}
+@media (max-width:768px){.layout{grid-template-columns:1fr}.poster{max-width:320px}}
